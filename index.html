@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOMERIC: Ensiklopedia Dewa, Pahlawan & Monster (77 Karakter)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- AUDIO AUTOPLAY (Mencari di assets/backsound.wav lalu fallback ke backsound.wav) -->
+    <audio id="bg-music" autoplay loop preload="auto">
+        <source src="assets/backsound.mp3" type="audio/mp3">
+        <source src="backsound.mp3" type="audio/mp3">
+    </audio>
+
+    <!-- FLOATING AUDIO PLAYER BAR -->
+    <div class="audio-Dock">
+        <button id="audio-toggle-btn" class="audio-btn" title="Putar / Jeda Musik (backsound.wav)">
+            <span id="eq-bars" class="eq-container paused">
+                <span class="eq-bar"></span>
+                <span class="eq-bar"></span>
+                <span class="eq-bar"></span>
+            </span>
+            <span id="audio-status-text">Musik: Siap</span>
+        </button>
+        <input type="range" id="audio-volume" min="0" max="1" step="0.05" value="0.4" title="Atur Volume Musik">
+    </div>
+
+    <!-- HERO HEADER -->
+    <header class="hero-header">
+        <div class="greek-pattern-overlay"></div>
+        <div class="container header-inner">
+            <div class="edition-badge">
+                🛡️ Edisi Definitif (77 Karakter): Zhovaga, Dewa Olympus, Raja, Pahlawan & Monster
+            </div>
+            <h1 class="main-title">ENSIKLOPEDIA DUNIA HOMER</h1>
+            <p class="subtitle">
+                Galeri Potret 1:1 Utuh Legenda Perang Troya dengan <strong>Skala Statistik 0–100 & PES Diamond Radar</strong>, analisis kelemahan, serta nilai moral kehidupan.
+            </p>
+            <div id="stats-summary" class="summary-badges"></div>
+        </div>
+    </header>
+
+    <!-- STICKY CONTROL BAR -->
+    <section class="control-bar">
+        <div class="container control-inner">
+            
+            <!-- Filter Pills Kategori -->
+            <div id="faction-pills" class="pill-group">
+                <button data-faction="all" class="filter-pill active">Semua (77)</button>
+                <button data-faction="Zhovaga" class="filter-pill">🌟 Zhovaga</button>
+                <button data-faction="Olympus" class="filter-pill">⚡ Dewa Olympus</button>
+                <button data-faction="Politik" class="filter-pill">👑 Raja & Politisi</button>
+                <button data-faction="Legenda" class="filter-pill">🏆 Pra-Troya</button>
+                <button data-faction="Danakai" class="filter-pill">🛡️ Yunani</button>
+                <button data-faction="Troya" class="filter-pill">🏰 Troya</button>
+                <button data-faction="Amazonia" class="filter-pill">🏹 Amazonia</button>
+                <button data-faction="Mitos" class="filter-pill">🐉 Monster & Mitos</button>
+            </div>
+
+            <!-- Search & Sort Controls -->
+            <div class="filter-inputs">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="search-input" placeholder="Cari Zhovaga, tokoh, dewa, politisi...">
+                    <button id="clear-search" class="clear-btn hidden" title="Bersihkan">✕</button>
+                </div>
+
+                <select id="moral-filter" class="select-input">
+                    <option value="all">Semua Pedoman</option>
+                    <option value="Teladan">⭐ Layak Ditiru</option>
+                    <option value="Hikmah">⚖️ Ambil Hikmahnya</option>
+                    <option value="Jangan">⚠️ Jangan Ditiru</option>
+                </select>
+
+                <select id="sort-select" class="select-input">
+                    <option value="default">Urutan Epik</option>
+                    <option value="ovr-desc">🔥 Rating OVR Tertinggi</option>
+                    <option value="kekuatan-desc">⚔️ Kekuatan (STR) Tertinggi</option>
+                    <option value="kecepatan-desc">⚡ Kecepatan (SPD) Tertinggi</option>
+                    <option value="taktik-desc">🧠 Taktik (TAC) Tertinggi</option>
+                    <option value="kepemimpinan-desc">👑 Kharisma (CHA) Tertinggi</option>
+                    <option value="nama-asc">🔤 Nama (A - Z)</option>
+                </select>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN CONTENT GRID -->
+    <main class="container main-content">
+        <div class="result-bar">
+            <span id="result-count">Memuat karakter...</span>
+            <span class="hint-text">💡 Klik kartu untuk membuka Codex 1:1 Utuh & Grafik Diamond</span>
+        </div>
+
+        <div id="hero-grid" class="card-grid"></div>
+
+        <!-- Empty State -->
+        <div id="no-results" class="empty-state hidden">
+            <div class="empty-icon">🔎</div>
+            <h3>Karakter Tidak Ditemukan</h3>
+            <p>Coba kata kunci lain atau tekan tombol reset di bawah.</p>
+            <button id="reset-filters-btn" class="btn-gold">Reset Semua Filter</button>
+        </div>
+    </main>
+
+    <!-- MODAL DETAIL KARAKTER (CODEX 1:1 SHOWCASE) -->
+    <div id="hero-modal" class="modal-backdrop hidden">
+        <div id="modal-box" class="modal-dialog">
+            <!-- Top Bar Modal: Navigasi Prev/Next & Close -->
+            <div class="modal-nav-bar">
+                <div class="modal-nav-buttons">
+                    <button id="prev-hero-btn" class="modal-nav-btn" title="Karakter Sebelumnya (Panah Kiri)">◀ Sebelumnya</button>
+                    <button id="next-hero-btn" class="modal-nav-btn" title="Karakter Berikutnya (Panah Kanan)">Berikutnya ▶</button>
+                </div>
+                <button id="close-modal-btn" class="modal-close" title="Tutup (Esc)">✕</button>
+            </div>
+            <div id="modal-body" class="modal-scroll custom-scrollbar"></div>
+        </div>
+    </div>
+
+    <!-- LIGHTBOX PREVIEW GAMBAR 1:1 PENUH -->
+    <div id="image-lightbox" class="lightbox-backdrop hidden" title="Klik di mana saja untuk menutup">
+        <img id="lightbox-img" src="" alt="Preview 1:1">
+        <span class="lightbox-caption">Klik di mana saja untuk menutup tampilan penuh</span>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <p class="footer-title">HOMERIC: THE BRONZE AGE ENCYCLOPEDIA</p>
+        <p>Dirancang dengan Ultra-Light Engine Architecture untuk pembelajaran sejarah & mitologi interaktif.</p>
+        <div class="footer-credit">
+            &copy; 2026 Created by <span class="creator-name">horosphoibos</span>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
